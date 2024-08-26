@@ -46,13 +46,30 @@ const limiter = rateLimit({
 app.use("/api", limiter);
 
 // allow cors
+// app.use(
+//   cors({
+//     origin: process.env.CLIENT_ORIGIN,
+//     credentials: true,
+//   })
+// );
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://backend-test-nine-steel.vercel.app',
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN,
+    origin: function(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
-
 
 
 
