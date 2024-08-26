@@ -3,9 +3,8 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const cors = require("cors");
-const path = require('path');
-const compression = require('compression');
-
+const path = require("path");
+const compression = require("compression");
 
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
@@ -14,13 +13,10 @@ const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
 const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
-const cookieSession = require('cookie-session');
+const cookieSession = require("cookie-session");
 const app = express();
 
 // app.enable('trust proxy');
-
-
-
 
 // GLOBAL MIDDLEWARE
 
@@ -46,32 +42,30 @@ const limiter = rateLimit({
 app.use("/api", limiter);
 
 // allow cors
-// app.use(
-//   cors({
-//     origin: process.env.CLIENT_ORIGIN,
-//     credentials: true,
-//   })
-// );
-
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://backend-test-nine-steel.vercel.app',
-];
-
 app.use(
   cors({
-    origin: function(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: "https://backend-test-nine-steel.vercel.app",
     credentials: true,
   })
 );
 
+// const allowedOrigins = [
+//   'http://localhost:3000',
+//   'https://backend-test-nine-steel.vercel.app',
+// ];
 
+// app.use(
+//   cors({
+//     origin: function(origin, callback) {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error('Not allowed by CORS'));
+//       }
+//     },
+//     credentials: true,
+//   })
+// );
 
 // app.use('/public', (req, res, next) => {
 //   res.header("Access-Control-Allow-Origin", "http://localhost:5000");
@@ -81,7 +75,6 @@ app.use(
 
 // app.use(express.static('public'))
 // app.use('/public', express.static(path.join(__dirname, '../public')));
-
 
 // body parser , reading data from body into req.body
 app.use(express.json({ limit: "100mb" }));
@@ -112,7 +105,6 @@ app.use(compression());
 // serving static files
 // app.use(express.static(`${__dirname}/public`));
 
-
 // app.get('/api/v1/tours',getAllTours);
 // app.get('/api/v1/tours/:id',getTour);
 // app.post('/api/v1/tours',createTour);
@@ -123,10 +115,7 @@ app.use((req, res, next) => {
   next();
 });
 
-
 app.use("/api/v1/users", userRouter);
-
-
 
 app.all("*", (req, res, next) => {
   // const err = new Error(`Cant find ${req.originalUrl}  on this server .`);
